@@ -50,7 +50,17 @@
         font-size: 23px;
         }
     body {
-        background-color: #58D68D;
+        background-color: #85929E;
+        }
+    .margin {
+        margin: 15px;
+        }
+    .right {
+        float:right;
+        border-color: black;
+        }
+    .gold {
+        background-color: #F1C40F ;
         }
     </style>
 </head>
@@ -65,18 +75,37 @@
       <a href="#about">About</a>
 ` </div>
   <div>
+    <img class="right" src="" alt="Fibonacci (series)">
+      <img class="right" src="" alt="Fibonacci (neature)">
+      <h2 class="margin">Let's talk about Fibonacci</h2>
+      <p class="margin">Leonardo Fibonacci also known as Leonardo of Pisa,Fibonacci series is a series for introduce things <br>
+          that repeat themselves again and again. Fibonacci-Graph-Analysis tool: <br>
+          Support & resistance area in stocks and digital coins graph. </p>
       <form class="handle_Data" action="{{ url_for('handle_data2') }}" method="post">
           <input type="date" name="periodDateStarted">
           <input type="date" name="periodDateEnd">
           <input type="text" name="projectFilepath">
-          <input type="submit" value="Fibonachi tool">
+          <input class="gold" type="submit" value="Fibonachi tool">
       </form>
+      <h2 class="margin">Let's talk about trends line and volume</h2>
+      <p class="margin">Current trading volume, Trading volume is a measure of how much of a given financial asset has traded
+          <br> in a period of time. For stocks, volume is measured in the number of shares traded <br>
+          Volume can be an indicator of  strong market, as rising markets on increasing volume are <br>
+          typically viewed as strong and good for invest.</p>
       <form class="handle_Data" action="{{ url_for('handle_data') }}" method="post">
           <input type="date" name="periodDateStarted">
           <input type="date" name="periodDateEnd">
           <input type="text" name="projectFilepath">
-          <input type="submit" value="Trends & Volume">
+          <input class="gold" type="submit" value="Trends & Volume">
       </form>
+      <form action="">
+          <input type="date" name="ROCperiodDateStart">
+          <input type="date" name="ROCperiodDateEnd">
+          <input type="text" name="projectFilepath">
+          <input type="number" value="termTrading">
+          <input class="gold" type="submit" value="ROC tool" >
+      </form>
+
   </div>
 </body>
 

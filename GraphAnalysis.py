@@ -20,6 +20,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from matplotlib import style
 import datetime
+import pandas as pd
+import numpy as np
+#from pandas_datareaders_unofficial import data as web
+import matplotlib.pyplot as plt
 
 
 
@@ -139,8 +143,49 @@ def handle_data2():
     periodDateEnd = request.form['periodDateEnd']
     my_link_Fibonachi(projectpath, periodDateStart, periodDateEnd)
     #return projectpath
-    return "back to our website"
+    return "Back to our site"
 
+
+@app.route('/my-link-Fibonachi/')
+def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading):
+    data = yf.download(company_symbol, start=ROCperiodDateStart, end=ROCperiodDateEnd)
+    dataAdjClose = data['Adj Close']
+    #data['ROC'] = (dataAdjClose,ROCtermTrading)
+
+
+    #def ROC (dataAdjClose , ROCtermTrading):
+    End_Difference_Start_Close_Price = dataAdjClose.diff(ROCtermTrading-1)
+    Start_Close_Price = dataAdjClose.diff(ROCtermTrading-1)
+    dataAdjClose['ROC'] = pd.Series(((End_Difference_Start_Close_Price / Start_Close_Price) * 100), name='ROC' + str(ROCtermTrading))
+    ax = None
+    ax[1].plot(dataAdjClose['ROC'])
+    plot_url = plt.show()
+    return render_template('index.html', plot_url=plot_url)
+
+
+
+    #def get_stock(stock, start, end):
+     #   return web.DataReader(stock, 'google', start, end)['Close']
+
+    #def ROC(df, n):
+     #   M = df.diff(n - 1)
+      #  N = df.shift(n - 1)
+       # ROC = pd.Series(((M / N) * 100), name='ROC_' + str(n))
+        #return ROC
+
+    #df = pd.DataFrame(get_stock(projectFilePath, ROCperiodDateStart, ROCperiodDateEnd))
+    #df['ROC'] = ROC(df['Close'], ROCtermTrading)
+    #df.tail()
+
+@app.route('/handle_data3', methods=['POST'])
+def handle_data3():
+    projectFilePath = request.form['projectFilepath']
+    ROCperiodDateStart = request.form['ROCperiodDateStart']
+    ROCperiodDateEnd = request.form['ROCperiodDateEnd']
+    ROCtermTrading = request.form['termTrading']
+    my_link_ROCtool(projectFilePath, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading)
+    #return projectpath
+    return "Back to our site"
 if __name__ == '__main__':
   app.run(debug=True)
 
