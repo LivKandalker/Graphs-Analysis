@@ -1,30 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
-import yfinance
-import quandl
-import numpy
-import seaborn
-import matplotlib
-import matplotlib_venn
-import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
-from tkinter import *
-import yfinance as yf
-import pandas as pd
 from scipy.stats import linregress
-import quandl, math
-from sklearn import preprocessing, svm
-#, cross_validation, svm
-from sklearn.model_selection import cross_val_score,cross_val_predict
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from matplotlib import style
-import datetime
 import pandas as pd
-import numpy as np
-#from pandas_datareaders_unofficial import data as web
+import yfinance as yf
 import matplotlib.pyplot as plt
-
 
 
 
@@ -146,36 +126,38 @@ def handle_data2():
     return "Back to our site"
 
 
-@app.route('/my-link-Fibonachi/')
+@app.route('/my-link-ROC/')
 def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading):
-    data = yf.download(company_symbol, start=ROCperiodDateStart, end=ROCperiodDateEnd)
-    dataAdjClose = data['Adj Close']
-    #data['ROC'] = (dataAdjClose,ROCtermTrading)
+    def get_stock(company_symbol, Date_start, Date_End):
+        data = yf.download(company_symbol, start=Date_start, end=Date_End)
 
+        data0 = data.copy()
+        data0['date_id'] = ((data0.index.date - data0.index.date.min())).astype('timedelta64[D]')
+        data0['date_id'] = data0['date_id'].dt.days + 1
+        df = data0.copy()
 
-    #def ROC (dataAdjClose , ROCtermTrading):
-    End_Difference_Start_Close_Price = dataAdjClose.diff(ROCtermTrading-1)
-    Start_Close_Price = dataAdjClose.diff(ROCtermTrading-1)
-    dataAdjClose['ROC'] = pd.Series(((End_Difference_Start_Close_Price / Start_Close_Price) * 100), name='ROC' + str(ROCtermTrading))
-    ax = None
-    ax[1].plot(dataAdjClose['ROC'])
+        return df['Adj Close']
+
+    def ROC(df, n):
+        M = df.diff(n - 1)
+        N = df.shift(n - 1)
+        ROC = pd.Series(((M / N) * 100))
+        return ROC
+
+    #fig, ax = plt.subplots(2)
+    df = pd.DataFrame(get_stock(company_symbol, ROCperiodDateStart, ROCperiodDateEnd))
+    df['ROC'] = ROC(df['Adj Close'], int(ROCtermTrading))
+    df.tail()
+    #ax[1].plot(df['ROC'])
+    #ax[0].plot(df['Adj Close'])
+    #print(df['ROC'])
+
+    plt.figure(figsize=(12.33, 4.5))
+    plt.title('ROC Plot')
+    plt.plot(df.index, df['ROC'])
+
     plot_url = plt.show()
     return render_template('index.html', plot_url=plot_url)
-
-
-
-    #def get_stock(stock, start, end):
-     #   return web.DataReader(stock, 'google', start, end)['Close']
-
-    #def ROC(df, n):
-     #   M = df.diff(n - 1)
-      #  N = df.shift(n - 1)
-       # ROC = pd.Series(((M / N) * 100), name='ROC_' + str(n))
-        #return ROC
-
-    #df = pd.DataFrame(get_stock(projectFilePath, ROCperiodDateStart, ROCperiodDateEnd))
-    #df['ROC'] = ROC(df['Close'], ROCtermTrading)
-    #df.tail()
 
 @app.route('/handle_data3', methods=['POST'])
 def handle_data3():
