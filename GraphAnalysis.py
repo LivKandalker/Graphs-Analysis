@@ -6,18 +6,31 @@ import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
 
-
-
 #app = Flask('template-index.html')
 app = Flask(__name__, template_folder='../templates')
 # Decorator defines a route
 # http://localhost:5000/
+
 @app.route('/')
 def index():
+    """
+    The link between python and HTML with flask
+    :return: index.html
+    """
     return render_template("index.html")
 
 @app.route('/my-link-Fibonachi/')
 def my_link_Fibonachi(company_symbol, Date_start, Date_End):
+
+  """
+  Calculate all of the Fibonacci level with the max&min to the chosen period, and show fibonacci
+   plot with tha Adj Close plot.
+  :param company_symbol: Known company or coin symbol at the stocks market
+  :param Date_start: Day,Month and Year for Start
+  :param Date_End: Day,Month and Year for the End
+  :return: Fibonacci plot for the period that chosen
+  """
+
   print ('I got clicked!')
   data = yf.download(company_symbol, start=Date_start, end=Date_End)
 
@@ -52,6 +65,14 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
 
 @app.route('/my-link-Trends/')
 def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
+  """
+  Calculate the Trends-Lines - connect all of the local minimum value together, and connect
+  all of the local maximum value together
+  :param company_symbol:Known company or coin symbol at the stocks market
+  :param periodDateStart:Day,Month and Year for Start
+  :param periodDateEnd:Day,Month and Year for End
+  :return: Two plot in one figure: 1)Adj close with Trends Line. 2) Volume plot
+  """
   print ('I got clicked!')
   data = yf.download(company_symbol, start=periodDateStart, end=periodDateEnd)
 
