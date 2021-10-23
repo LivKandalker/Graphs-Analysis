@@ -66,53 +66,88 @@
 </head>
 
 <body>
+<div> #The title & sub-title & navigation-bar for the system
+
   <h1 class="title_of_page">Graph Analysis</h1>
   <p class="sub_title">This is the Ultimate web for your analysis stocks or coins graphs</p>
-  <div class="topnav">
+
+  <div class="topnav"> #navigation-bar
+
       <a class="active" href="#home">Home</a>
       <a href="#news">News</a>
       <a href="#contact">Contact</a>
       <a href="#about">About</a>
+
 ` </div>
+
+</div>
   <div>
-    <img class="right" src="" alt="Fibonacci (series)">
+      <div> #The images on the right side of homePage in the system
+
+      <img class="right" src="" alt="Fibonacci (series)">
       <img class="right" src="" alt="Fibonacci (neature)">
+
+      </div>
+      <div> #The fibonacci tool include Title, Sub-title, period of data, Symbol-name of stocks/coins and submit
+
       <h2 class="margin">Let's talk about Fibonacci</h2>
       <p class="margin">Leonardo Fibonacci also known as Leonardo of Pisa,Fibonacci series is a series for introduce things <br>
           that repeat themselves again and again. Fibonacci-Graph-Analysis tool: <br>
           Support & resistance area in stocks and digital coins graph. </p>
+
       <form class="handle_Data" action="{{ url_for('handle_data2') }}" method="post">
+
           <input type="date" name="periodDateStarted">
           <input type="date" name="periodDateEnd">
           <input type="text" name="projectFilepath">
           <input class="gold" type="submit" value="Fibonachi tool">
+
       </form>
+
+      </div>
+
+      <div>#The Volume&Trends tool include Title, Sub-title, period of data, Symbol-name of stocks/coins and submit
+
       <h2 class="margin">Let's talk about trends line and volume</h2>
       <p class="margin">Current trading volume, Trading volume is a measure of how much of a given financial asset has traded
           <br> in a period of time. For stocks, volume is measured in the number of shares traded <br>
           Volume can be an indicator of  strong market, as rising markets on increasing volume are <br>
           typically viewed as strong and good for invest.</p>
+
       <form class="handle_Data" action="{{ url_for('handle_data') }}" method="post">
+
           <input type="date" name="periodDateStarted">
           <input type="date" name="periodDateEnd">
           <input type="text" name="projectFilepath">
           <input class="gold" type="submit" value="Trends & Volume">
+
       </form>
+
+      </div>
+
+      <div>#The ROC-indicator tool include Title, Sub-title, period of data, Symbol-name of stocks/coins, ROC_num and submit
+
       <h2>Let's talk about ROC indicator</h2>
       <p>The Price Rate of Change (ROC) is a momentum-based technical indicator that <br>
           measures the percentage change in price between the current price and the <br>
           price a certain number of periods ago. The ROC indicator is plotted against <br>
           zero, with the indicator moving upwards into positive territory if price changes <br>
           are to the upside, and moving into negative territory if price changes are to the downside.</p>
+
       <form class="handle_Data" action="{{ url_for('handle_data3') }}" method="post">
+
           <input type="date" name="ROCperiodDateStart">
           <input type="date" name="ROCperiodDateEnd">
           <input type="text" name="projectFilepath">
           <input type="number" name="termTrading">
           <input class="gold" type="submit" value="ROC tool" >
+
       </form>
 
+      </div>
+
   </div>
+
 </body>
 
 </html>
