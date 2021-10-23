@@ -98,11 +98,17 @@
           <input type="text" name="projectFilepath">
           <input class="gold" type="submit" value="Trends & Volume">
       </form>
-      <form action="">
+      <h2>Let's talk about ROC indicator</h2>
+      <p>The Price Rate of Change (ROC) is a momentum-based technical indicator that <br>
+          measures the percentage change in price between the current price and the <br>
+          price a certain number of periods ago. The ROC indicator is plotted against <br>
+          zero, with the indicator moving upwards into positive territory if price changes <br>
+          are to the upside, and moving into negative territory if price changes are to the downside.</p>
+      <form class="handle_Data" action="{{ url_for('handle_data3') }}" method="post">
           <input type="date" name="ROCperiodDateStart">
           <input type="date" name="ROCperiodDateEnd">
           <input type="text" name="projectFilepath">
-          <input type="number" value="termTrading">
+          <input type="number" name="termTrading">
           <input class="gold" type="submit" value="ROC tool" >
       </form>
 
