@@ -131,6 +131,10 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
 
 @app.route('/handle_data', methods=['POST'])
 def handle_data():
+    """
+    handle data save the details from the form in new varaibles and send to my trends function
+    :return: message: "back to our website"
+    """
     projectpath = request.form['projectFilepath']
     periodDateStart = request.form['periodDateStarted']
     periodDateEnd = request.form['periodDateEnd']
@@ -139,6 +143,10 @@ def handle_data():
 
 @app.route('/handle_data2', methods=['POST'])
 def handle_data2():
+    """
+    handle data 2 save the details from the form in new varaibles and send to my Fibonacci function
+    :return: message: "back to our website"
+    """
     projectpath = request.form['projectFilepath']
     periodDateStart = request.form['periodDateStarted']
     periodDateEnd = request.form['periodDateEnd']
@@ -149,7 +157,22 @@ def handle_data2():
 
 @app.route('/my-link-ROC/')
 def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading):
+    """
+    Create a graph figure of the ROC tool from the HTML
+    :param company_symbol:stocks symbol (TSLA - is the symbol for tesla company for example)
+    :param ROCperiodDateStart:Date start user chose
+    :param ROCperiodDateEnd:Date End user chose
+    :param ROCtermTrading:Time of trading for
+    :return:ROC tool from the HTML
+    """
     def get_stock(company_symbol, Date_start, Date_End):
+        """
+        Get stock and period and create a data frame copy
+        :param company_symbol: stocks symbol (TSLA - is the symbol for tesla company for example)
+        :param Date_start: Date start user chose
+        :param Date_End: Date End user chose
+        :return: Data frame of Adj close
+        """
         data = yf.download(company_symbol, start=Date_start, end=Date_End)
 
         data0 = data.copy()
@@ -160,6 +183,12 @@ def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCter
         return df['Adj Close']
 
     def ROC(df, n):
+        """
+        Calculate the Rate of change
+        :param df: Copy of the data frame
+        :param n: Time of trading for
+        :return: ROC
+        """
         M = df.diff(n - 1)
         N = df.shift(n - 1)
         ROC = pd.Series(((M / N) * 100))
@@ -182,6 +211,10 @@ def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCter
 
 @app.route('/handle_data3', methods=['POST'])
 def handle_data3():
+    """
+    handle data save the details from the form in new varaibles and send to my ROC tool function
+    :return: message: "back to our website"
+    """
     projectFilePath = request.form['projectFilepath']
     ROCperiodDateStart = request.form['ROCperiodDateStart']
     ROCperiodDateEnd = request.form['ROCperiodDateEnd']
