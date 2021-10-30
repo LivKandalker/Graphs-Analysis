@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, render_template, request, redirect, url_for
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
@@ -8,8 +9,8 @@ import seaborn as sns
 import matplotlib.dates as mdates
 import matplotlib.patches as mpatches
 
-#app = Flask('template-index.html')
-app = Flask(__name__, template_folder='../templates')
+#app = Flask('templates-index.html')
+app = Flask(__name__, template_folder='../../flask_project/flaskr/templates')
 # Decorator defines a route
 # http://localhost:5000/
 
@@ -23,7 +24,6 @@ def index():
 
 @app.route('/my-link-Fibonachi/')
 def my_link_Fibonachi(company_symbol, Date_start, Date_End):
-
   """
   Calculate all of the Fibonacci level with the max&min to the chosen period, and show fibonacci
    plot with tha Adj Close plot.
@@ -32,7 +32,8 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   :param Date_End: Day,Month and Year for the End
   :return: Fibonacci plot for the period that chosen
   """
-  print ('I got clicked!')
+  #will print a message to the console
+  logging.debug('I got clicked!')
 
   # Import specipic data from the Yahoo Finance website
   data = yf.download(company_symbol, start=Date_start, end=Date_End)
@@ -84,7 +85,8 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
   :param periodDateEnd:Day,Month and Year for End
   :return: Two plot in one figure: 1)Adj close with Trends Line. 2) Volume plot
   """
-  print ('I got clicked!')
+  #will print a message to the console
+  logging.debug('I got clicked!')
 
   # Import specipic data from the Yahoo Finance website
   data = yf.download(company_symbol, start=periodDateStart, end=periodDateEnd)
@@ -93,9 +95,10 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
   data['date_id'] = data['date_id'].dt.days + 1
 
   # Create a linear line for high trend line in graph
-  print(data)
-  Data_Trends = data.copy()
+  #will print the data table to the console
+  logging.debug(data)
 
+  Data_Trends = data.copy()
   while len(Data_Trends) > 3:
     reg = linregress(
       x=Data_Trends['date_id'],
@@ -142,6 +145,19 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
   # Save the plot in Varaible and return the plot to the HTML web
   plot_url = plt.show()
   return render_template('index.html', plot_url=plot_url)
+
+@app.route('/Send_To_Fibonacci', methods=['POST'])
+def Send_To_Fibonacci():
+    """
+    handle data 2 save the details from the form in new varaibles and send to my Fibonacci function
+    :return: message: "back to our website"
+    """
+    projectpath = request.form['projectFilepath']
+    periodDateStart = request.form['periodDateStarted']
+    periodDateEnd = request.form['periodDateEnd']
+    my_link_Fibonachi(projectpath, periodDateStart, periodDateEnd)
+    #return projectpath
+    return "Back to our site"
 
 @app.route('/Send_to_Trend', methods=['POST'])
 def Send_to_Trend():
