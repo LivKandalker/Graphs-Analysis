@@ -6,63 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Graph Analysis</title>
-    <style>
-    /* Add a black background color to the top navigation */
-    .topnav {
-        background-color: #333; /*Black*/
-        overflow: hidden;
-        margin: 15px;
-        }
-    /* Style the links inside the navigation bar */
-    .topnav a {
-        float: left;
-        color: #f2f2f2; /*White*/
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-        }
-    /* Change the color of links on hover */
-    .topnav a:hover {
-        background-color: #ddd; /*light gray*/
-        color: black;
-        }
-    /* Add a color to the active/current link */
-    #.topnav a.active {
-        #background-color: #04AA6D;
-        #color: white;
-#}
-    .handle_Data {
-        margin: 15px;
-        }
-    .title_of_page {
-        text-align: center;
-        color: #f2f2f2;
-        background-color: #333;
-        padding: 14px 16px;
-        font-size: 32px;
-        }
-    .sub_title {
-        text-align: center;
-        color: #f2f2f2;
-        background-color: #333;
-        padding: 14px 16px;
-        font-size: 23px;
-        }
-    body {
-        background-color: #85929E;
-        }
-    .margin {
-        margin: 15px;
-        }
-    .right {
-        float:right;
-        border-color: black;
-        }
-    .gold {
-        background-color: #F1C40F ;
-        }
-    </style>
+  <link rel="stylesheet" link="flask_project/flaskr/templates/static/styles.css" type="text/css">
 </head>
 
 <body>
@@ -93,7 +37,7 @@
           that repeat themselves again and again. Fibonacci-Graph-Analysis tool: <br>
           Support & resistance area in stocks and digital coins graph. </p>
 
-      <form class="handle_Data" action="{{ url_for('Sent_To_Fibonacci') }}" method="post">
+      <form class="handle_Data" action="{{ url_for('Send_To_Fibonacci') }}" method="post">
 
           <input type="date" name="periodDateStarted">
           <input type="date" name="periodDateEnd">
