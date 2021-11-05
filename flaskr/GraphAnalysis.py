@@ -1,5 +1,7 @@
 import logging
-from flask import Flask, render_template, request, redirect, url_for
+import os
+from distutils.util import execute
+from flask import Flask, render_template, request, redirect, url_for, send_file
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 from scipy.stats import linregress
@@ -11,6 +13,9 @@ import matplotlib.patches as mpatches
 
 #app = Flask('templates-index.html')
 app = Flask(__name__, template_folder='../../flask_project/flaskr/templates')
+GRAPH_FOLDER = os.path.join('flaskr')
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = GRAPH_FOLDER
 # Decorator defines a route
 # http://localhost:5000/
 
@@ -22,6 +27,24 @@ def index():
     """
     return render_template("index.html")
 
+@app.route('/Send_To_Fibonacci', methods=['POST'])
+def Send_To_Fibonacci():
+    """
+    handle data 2 save the details from the form in new varaibles and send to my Fibonacci function
+    :return: message: "back to our website"
+    """
+    projectpath = request.form['projectFilepath']
+    periodDateStart = request.form['periodDateStarted']
+    periodDateEnd = request.form['periodDateEnd']
+    fibonacci_graph = my_link_Fibonachi(projectpath, periodDateStart, periodDateEnd)
+
+    #will print a message to the console
+    logging.debug(fibonacci_graph)
+    return fibonacci_graph
+
+
+@app.route('/')
+@app.route('/index')
 @app.route('/my-link-Fibonachi/')
 def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   """
@@ -32,16 +55,17 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   :param Date_End: Day,Month and Year for the End
   :return: Fibonacci plot for the period that chosen
   """
-  #will print a message to the console
+  #Save the plot in Varaible and return the plot to the HTML web
+
+  # will print a message to the console
   logging.debug('I got clicked!')
 
   # Import specipic data from the Yahoo Finance website
   data = yf.download(company_symbol, start=Date_start, end=Date_End)
-
   data['date_id'] = ((data.index.date - data.index.date.min())).astype('timedelta64[D]')
   data['date_id'] = data['date_id'].dt.days + 1
 
-  #Finding the maximum price and finding the minimum price
+  # Finding the maximum price and finding the minimum price
   maximum_price = data['Adj Close'].max()
   minimum_price = data['Adj Close'].min()
 
@@ -52,14 +76,14 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   third_level = maximum_price - difference * 0.5
   fourth_level = maximum_price - difference * 0.618
 
-  #Define the graph size
+  # Define the graph size
   plt.figure(figsize=(12.33, 4.5))
 
-  #Define the graph name-graph title and for the Adj close information
+  # Define the graph name-graph title and for the Adj close information
   plt.title('Fibonnacci Plot')
   plt.plot(data.index, data['Adj Close'])
 
-  #Create colored straight lines according to calculated Fibonacci levels
+  # Create colored straight lines according to calculated Fibonacci levels
   plt.axhline(maximum_price, linestyle='--', alpha=0.3, color='red')
   plt.axhline(first_level, linestyle='--', alpha=0.3, color='orange')
   plt.axhline(second_level, linestyle='--', alpha=0.3, color='yellow')
@@ -67,13 +91,12 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   plt.axhline(fourth_level, linestyle='--', alpha=0.3, color='blue')
   plt.axhline(minimum_price, linestyle='--', alpha=0.3, color='purple')
 
-  #Define the font size of x & y label (Date & close price)
+  # Define the font size of x & y label (Date & close price)
   plt.xlabel('Date', fontsize=18)
   plt.ylabel('Close Price in USD', fontsize=18)
-
-  #Save the plot in Varaible and return the plot to the HTML web
   plot_url = plt.show()
-  return render_template('index.html', plot_url=plot_url)
+  return render_template('index.html', plot_url = plot_url)
+
 
 @app.route('/my-link-Trends/')
 def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
@@ -146,19 +169,6 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
   plot_url = plt.show()
   return render_template('index.html', plot_url=plot_url)
 
-@app.route('/Send_To_Fibonacci', methods=['POST'])
-def Send_To_Fibonacci():
-    """
-    handle data 2 save the details from the form in new varaibles and send to my Fibonacci function
-    :return: message: "back to our website"
-    """
-    projectpath = request.form['projectFilepath']
-    periodDateStart = request.form['periodDateStarted']
-    periodDateEnd = request.form['periodDateEnd']
-    my_link_Fibonachi(projectpath, periodDateStart, periodDateEnd)
-    #return projectpath
-    return "Back to our site"
-
 @app.route('/Send_to_Trend', methods=['POST'])
 def Send_to_Trend():
     """
@@ -168,22 +178,8 @@ def Send_to_Trend():
     projectpath = request.form['projectFilepath']
     periodDateStart = request.form['periodDateStarted']
     periodDateEnd = request.form['periodDateEnd']
-    my_link_Trends(projectpath, periodDateStart, periodDateEnd)
-    return "back to our website"
-
-@app.route('/Sent_To_Fibonacci', methods=['POST'])
-def Sent_To_Fibonacci():
-    """
-    handle data 2 save the details from the form in new varaibles and send to my Fibonacci function
-    :return: message: "back to our website"
-    """
-    projectpath = request.form['projectFilepath']
-    periodDateStart = request.form['periodDateStarted']
-    periodDateEnd = request.form['periodDateEnd']
-    my_link_Fibonachi(projectpath, periodDateStart, periodDateEnd)
-    #return projectpath
-    return "Back to our site"
-
+    Trends_and_volume = my_link_Trends(projectpath, periodDateStart, periodDateEnd)
+    return Trends_and_volume
 
 @app.route('/my-link-ROC/')
 def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading):
@@ -252,8 +248,8 @@ def Send_To_ROC():
     ROCperiodDateStart = request.form['ROCperiodDateStart']
     ROCperiodDateEnd = request.form['ROCperiodDateEnd']
     ROCtermTrading = request.form['termTrading']
-    my_link_ROCtool(projectFilePath, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading)
-    return "Back to our site"
+    ROC_tool = my_link_ROCtool(projectFilePath, ROCperiodDateStart, ROCperiodDateEnd, ROCtermTrading)
+    return ROC_tool
 
 @app.route('/Send_To_SMA', methods=['POST'])
 def Send_To_SMA():
@@ -264,9 +260,8 @@ def Send_To_SMA():
     projectFilePath = request.form['projectFilepath']
     SMAperiodDateStart = request.form['SMAperiodDateStart']
     SMAperiodDateEnd = request.form['SMAperiodDateEnd']
-    my_link_SMAtool(projectFilePath, SMAperiodDateStart, SMAperiodDateEnd)
-    #return projectpath
-    return "Back to our site"
+    SMA_tool = my_link_SMAtool(projectFilePath, SMAperiodDateStart, SMAperiodDateEnd)
+    return SMA_tool
 
 @app.route('/my-link-SMA/')
 def my_link_SMAtool(company_symbol, SMAperiodDateStart, SMAperiodDateEnd):
@@ -284,28 +279,29 @@ def my_link_SMAtool(company_symbol, SMAperiodDateStart, SMAperiodDateEnd):
 
     # Import specipic data from the Yahoo Finance website
     data = yf.download(company_symbol, start=SMAperiodDateStart, end=SMAperiodDateEnd)
+    data['date_id'] = ((data.index.date - data.index.date.min())).astype('timedelta64[D]')
+    data['date_id'] = data['date_id'].dt.days + 1
 
     # Calculating the short-window simple moving average
     short_rolling = data.rolling(window=20).mean()
+
 
     # Calculating the long-window simple moving average
     long_rolling = data.rolling(window=100).mean()
 
     # Create place for the Plot in one output and define the size
-    fig, ax = plt.subplots(figsize=(16, 9))
+    fig, ax = plt.subplots(2)
 
     #Create all the graph in the plot
-    ax.plot(data.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, data.loc[SMAperiodDateStart:SMAperiodDateEnd],color="black", label='Price')
-    ax.plot(long_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, long_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd],color="red", label='100-days SMA')
-    ax.plot(short_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, short_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd],color="green", label='20-days SMA')
+    ax[0].plot(long_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, long_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd],color="red", label='100-days SMA')
+    ax[0].plot(short_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, short_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd],color="green", label='20-days SMA')
 
-    #Define the color for each graph and the X&Y title and value type
-    red_patch = mpatches.Patch(color='red', label='100-days SMA')
-    green_patch = mpatches.Patch(color='green', label='20-days SMA')
-    black_patch = mpatches.Patch(color='black', label='Price')
-    plt.legend(handles=[red_patch, green_patch, black_patch])
-    ax.set_ylabel('Price in $')
-    ax.xaxis.set_major_formatter(my_year_month_fmt)
+    # Import specipic data from the Yahoo Finance website
+    data = yf.download(company_symbol, start=SMAperiodDateStart, end=SMAperiodDateEnd)
+    data['date_id'] = ((data.index.date - data.index.date.min())).astype('timedelta64[D]')
+    data['date_id'] = data['date_id'].dt.days + 1
+
+    ax[1].plot(data['Adj Close'])
 
     # Save the plot in Varaible and return the plot to the HTML web
     plot_url = plt.show()
