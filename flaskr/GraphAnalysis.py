@@ -3,6 +3,8 @@ import os
 from distutils.util import execute
 from flask import Flask, render_template, request, redirect, url_for, send_file
 import matplotlib.pyplot as plt
+from pygments.lexers import web
+
 plt.style.use('fivethirtyeight')
 from scipy.stats import linregress
 import pandas as pd
@@ -273,35 +275,29 @@ def my_link_SMAtool(company_symbol, SMAperiodDateStart, SMAperiodDateEnd):
     :param SMAperiodDateEnd:Date End user chose
     :return:SMA tool from the HTML
     """
-    #sns.set(style='darkgrid', context='talk', palette='Dark2')
+    import matplotlib.pyplot as plt
 
-    my_year_month_fmt = mdates.DateFormatter('%m/%y')
+    # set start and end dates
+    start = SMAperiodDateStart
+    end = SMAperiodDateEnd
 
-    # Import specipic data from the Yahoo Finance website
-    data = yf.download(company_symbol, start=SMAperiodDateStart, end=SMAperiodDateEnd)
+    # extract the closing price data
+    data = yf.download(company_symbol, start=start, end=end)
+
     data['date_id'] = ((data.index.date - data.index.date.min())).astype('timedelta64[D]')
     data['date_id'] = data['date_id'].dt.days + 1
 
-    # Calculating the short-window simple moving average
-    short_rolling = data.rolling(window=20).mean()
+    # create 20 days simple moving average column
+    data['20_SMA'] = data['Adj Close'].rolling(window=20, min_periods=1).mean()
 
+    # create 50 days simple moving average column
+    data['50_SMA'] = data['Adj Close'].rolling(window=50, min_periods=1).mean()
 
-    # Calculating the long-window simple moving average
-    long_rolling = data.rolling(window=100).mean()
-
-    # Create place for the Plot in one output and define the size
-    fig, ax = plt.subplots(2)
-
-    #Create all the graph in the plot
-    ax[0].plot(long_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, long_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd],color="red", label='100-days SMA')
-    ax[0].plot(short_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd, :].index, short_rolling.loc[SMAperiodDateStart:SMAperiodDateEnd],color="green", label='20-days SMA')
-
-    # Import specipic data from the Yahoo Finance website
-    data = yf.download(company_symbol, start=SMAperiodDateStart, end=SMAperiodDateEnd)
-    data['date_id'] = ((data.index.date - data.index.date.min())).astype('timedelta64[D]')
-    data['date_id'] = data['date_id'].dt.days + 1
-
-    ax[1].plot(data['Adj Close'])
+    plt.figure(figsize=(20, 10))
+    # plot close price, short-term and long-term moving averages
+    data['Adj Close'].plot(color='k', label='Close Price')
+    data['20_SMA'].plot(color='b', label='20 - day SMA')
+    data['50_SMA'].plot(color='g', label='50 - day SMA')
 
     # Save the plot in Varaible and return the plot to the HTML web
     plot_url = plt.show()
