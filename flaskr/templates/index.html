@@ -40,11 +40,14 @@
           that repeat themselves again and again. Fibonacci-Graph-Analysis tool: <br>
           Support & resistance area in stocks and digital coins graph. </p>
 
-      <form class="handle_Data" action="{{ url_for('Send_To_Fibonacci') }}" method="post">
+      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_Fibonacci') }}"  method="post">
 
-          <input type="date" name="periodDateStarted">
-          <input type="date" name="periodDateEnd">
-          <input type="text" name="projectFilepath">
+          <label for="periodDateStartedFibonacci">Start Date:</label>
+          <input type="date" name="periodDateStarted" id="periodDateStartedFibonacci">
+          <label for="periodDateEndFibonacci">End Date:</label>
+          <input type="date" name="periodDateEnd" id="periodDateEndFibonacci">
+          <label for="projectFilepathFibonacci">Symbol of stock:</label>
+          <input type="text" name="projectFilepath"  placeholder="Choose symbol of stock" id="projectFilepathFibonacci">
           <input class="gold" type="submit" value="Fibonachi tool">
 
       </form>
@@ -61,9 +64,12 @@
 
       <form class="handle_Data" action="{{ url_for('Send_to_Trend') }}" method="post">
 
-          <input type="date" name="periodDateStarted">
-          <input type="date" name="periodDateEnd">
-          <input type="text" name="projectFilepath">
+          <label for="periodDateStartedTrendVolume">Start Date:</label>
+          <input type="date" name="periodDateStarted" id="periodDateStartedTrendVolume">
+          <label for="periodDateEndTrendVolume">End Date:</label>
+          <input type="date" name="periodDateEnd" id="periodDateEndTrendVolume">
+          <label for="projectFilepathTrendVolume">Symbol Name:</label>
+          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="projectFilepathTrendVolume">
           <input class="gold" type="submit" value="Trends & Volume">
 
       </form>
@@ -83,8 +89,8 @@
 
           <input type="date" name="ROCperiodDateStart">
           <input type="date" name="ROCperiodDateEnd">
-          <input type="text" name="projectFilepath">
-          <input type="number" name="termTrading">
+          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock">
+          <input type="number" name="termTrading" placeholder="Choose number of period">
           <input class="gold" type="submit" value="ROC tool" >
 
       </form>
@@ -105,7 +111,7 @@
 
           <input type="date" name="SMAperiodDateStart">
           <input type="date" name="SMAperiodDateEnd">
-          <input type="text" name="projectFilepath">
+          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock">
           <input class="gold" type="submit" value="SMA 20 & 100 Days" >
 
       </form>

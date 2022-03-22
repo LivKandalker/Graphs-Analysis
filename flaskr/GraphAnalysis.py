@@ -97,7 +97,7 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   plt.xlabel('Date', fontsize=18)
   plt.ylabel('Close Price in USD', fontsize=18)
   plot_url = plt.show()
-  return render_template('index.html', plot_url = plot_url)
+  return render_template('plots.html', plot_url = plot_url)
 
 
 @app.route('/my-link-Trends/')
