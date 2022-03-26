@@ -87,10 +87,14 @@
 
       <form class="handle_Data" action="{{ url_for('Send_To_ROC') }}" method="post">
 
-          <input type="date" name="ROCperiodDateStart">
-          <input type="date" name="ROCperiodDateEnd">
-          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock">
-          <input type="number" name="termTrading" placeholder="Choose number of period">
+          <label for="periodDateStartedRoc">Start Date:</label>
+          <input type="date" name="ROCperiodDateStart" id="periodDateStartedRoc">
+          <label for="periodDateEndRoc">End Date:</label>
+          <input type="date" name="ROCperiodDateEnd" id="periodDateEndRoc">
+          <label for="projectFilepathRoc">Enter Symbol of stock:</label>
+          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="projectFilepathRoc">
+          <label for="termTradingRoc">Enter term of Trading:</label>
+          <input type="number" name="termTrading" placeholder="Choose number of period" id="termTradingRoc">
           <input class="gold" type="submit" value="ROC tool" >
 
       </form>
@@ -109,9 +113,12 @@
 
       <form class="handle_Data" action="{{ url_for('Send_To_SMA') }}" method="post">
 
-          <input type="date" name="SMAperiodDateStart">
-          <input type="date" name="SMAperiodDateEnd">
-          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock">
+          <label for="SMAperiodDateStart">Start Date:</label>
+          <input type="date" name="SMAperiodDateStart" id="SMAperiodDateStart">
+          <label for="SMAperiodDateEnd">End Date:</label>
+          <input type="date" name="SMAperiodDateEnd" id="SMAperiodDateEnd">
+          <label for="SMAprojectFilePath">Enter symbol of stock:</label>
+          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="SMAprojectFilePath">
           <input class="gold" type="submit" value="SMA 20 & 100 Days" >
 
       </form>
