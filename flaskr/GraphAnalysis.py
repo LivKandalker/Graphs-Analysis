@@ -1,8 +1,12 @@
 import logging
 import os
 from distutils.util import execute
-from flask import Flask, render_template, request, redirect, url_for, send_file
+
+import pandas
+from flask import Flask, render_template, request, redirect, url_for, send_file, Response
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import io
 from pygments.lexers import web
 
 plt.style.use('fivethirtyeight')
@@ -20,6 +24,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = GRAPH_FOLDER
 # Decorator defines a route
 # http://localhost:5000/
+
 
 @app.route('/')
 def index():
@@ -96,8 +101,10 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   # Define the font size of x & y label (Date & close price)
   plt.xlabel('Date', fontsize=18)
   plt.ylabel('Close Price in USD', fontsize=18)
-  plot_url = plt.show()
-  return render_template('plots.html', plot_url = plot_url)
+  plt.plot(data.index, data['Adj Close'], maximum_price,first_level, second_level, third_level, fourth_level, minimum_price)
+  plot_url= plt.show()
+  return render_template('plots.html', plot_url='plot_url')
+
 
 
 @app.route('/my-link-Trends/')
@@ -169,7 +176,8 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd ):
 
   # Save the plot in Varaible and return the plot to the HTML web
   plot_url = plt.show()
-  return render_template('index.html', plot_url=plot_url)
+  return render_template('plots.html', plot_url=plot_url)
+
 
 @app.route('/Send_to_Trend', methods=['POST'])
 def Send_to_Trend():

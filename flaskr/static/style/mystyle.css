@@ -53,3 +53,10 @@ body {
     background-color: #F1C40F ;
     }
 
+label {
+    color: antiquewhite;
+}
+input  {
+    background-color: darkseagreen;
+    color: #333333;
+}
