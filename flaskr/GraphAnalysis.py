@@ -101,7 +101,6 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
   # Define the font size of x & y label (Date & close price)
   plt.xlabel('Date', fontsize=18)
   plt.ylabel('Close Price in USD', fontsize=18)
-  plt.plot(data.index, data['Adj Close'], maximum_price,first_level, second_level, third_level, fourth_level, minimum_price)
   plot_url= plt.show()
   return render_template('plots.html', plot_url='plot_url')
 
