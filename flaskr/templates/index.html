@@ -123,6 +123,14 @@
 
       </form>
 
+      <form class="handle_Data" action="{{ url_for('Send_To_Mail') }}" method="post">
+
+          <label for="MailProjectFilePath">Enter Your Email:</label>
+          <input type="text" name="projectFilepath" placeholder="Example: Kandalker.liv@gmail.com" id="MailProjectFilePath">
+          <input class="gold" type="submit" value="SEND" >
+
+      </form>
+
       </div>
 
   </div>

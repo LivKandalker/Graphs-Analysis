@@ -9,6 +9,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from flask import Flask, render_template, request, redirect, url_for, send_file, Response
 import matplotlib.pyplot as plt
+import yagmail
 
 plt.style.use('fivethirtyeight')
 from scipy.stats import linregress
@@ -108,16 +109,17 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
     plt.plot(data.index, data['Adj Close'])
 
     # Create colored straight lines according to calculated Fibonacci levels
-    plt.axhline(maximum_price, linestyle='--', alpha=0.3, color='red')
-    plt.axhline(first_level, linestyle='--', alpha=0.3, color='orange')
-    plt.axhline(second_level, linestyle='--', alpha=0.3, color='yellow')
-    plt.axhline(third_level, linestyle='--', alpha=0.3, color='green')
-    plt.axhline(fourth_level, linestyle='--', alpha=0.3, color='blue')
-    plt.axhline(minimum_price, linestyle='--', alpha=0.3, color='purple')
+    plt.axhline(maximum_price, linestyle='--', alpha=0.3, color='red', label='maximum_price')
+    plt.axhline(first_level, linestyle='--', alpha=0.3, color='orange', label='first_level')
+    plt.axhline(second_level, linestyle='--', alpha=0.3, color='yellow', label='second_level')
+    plt.axhline(third_level, linestyle='--', alpha=0.3, color='green', label='third_level')
+    plt.axhline(fourth_level, linestyle='--', alpha=0.3, color='blue', label='fourth_level')
+    plt.axhline(minimum_price, linestyle='--', alpha=0.3, color='purple', label='minimum_price')
 
     # Define the font size of x & y label (Date & close price)
     plt.xlabel('Date', fontsize=18)
     plt.ylabel('Close Price in USD', fontsize=18)
+    plt.legend(loc="upper left")
 
     fig = plt.savefig("myPlot")
     return render_template('plots.html')
@@ -183,12 +185,14 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd):
     fig, ax = plt.subplots(2)
 
     # plot for Trends
-    ax[0].plot(data['Adj Close'])
-    ax[0].plot(data['high_trend'])
-    ax[0].plot(data['low_trend'])
+    ax[0].plot(data['Adj Close'], label='Adj_Close')
+    ax[0].plot(data['high_trend'], label='high_trend')
+    ax[0].plot(data['low_trend'], label='low_trend')
+    plt.legend(loc="upper left")
 
     # Plot for Volume
-    ax[1].plot(data['Volume'])
+    ax[1].plot(data['Volume'], label='Volume')
+    plt.legend(loc="upper left")
 
     # Save the plot in Varaible and return the plot to the HTML web
     #plot_url = plt.show()
@@ -263,7 +267,8 @@ def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCter
     # Define the size of the plot and the name title of the plot. Create graph for the index un ROC data frame
     plt.figure(figsize=(12.33, 4.5))
     plt.title('ROC Plot')
-    plt.plot(df.index, df['ROC'])
+    plt.plot(df.index, df['ROC'], label='ROC')
+    plt.legend(loc="upper left")
 
     # Save the plot in Varaible and return the plot to the HTML web
     #plot_url = plt.show()
@@ -330,10 +335,10 @@ def my_link_SMAtool(company_symbol, SMAperiodDateStart, SMAperiodDateEnd):
 
     plt.figure(figsize=(20, 10))
     # plot close price, short-term and long-term moving averages
-    data['Adj Close'].plot(color='k', label='Close Price')
-    data['20_SMA'].plot(color='b', label='20 - day SMA')
-    data['50_SMA'].plot(color='g', label='50 - day SMA')
-
+    data['Adj Close'].plot(color='black', label='Close Price')
+    data['20_SMA'].plot(color='blue', label='20 - day SMA')
+    data['50_SMA'].plot(color='green', label='50 - day SMA')
+    plt.legend(loc="upper left")
     # Save the plot in Varaible and return the plot to the HTML web
     #plot_url = plt.show()
     #return render_template('index.html', plot_url=plot_url)
@@ -341,6 +346,45 @@ def my_link_SMAtool(company_symbol, SMAperiodDateStart, SMAperiodDateEnd):
     # Save the plot in Varaible and return the plot to the HTML web
     fig = plt.savefig("myPlot")
     return render_template('plots.html')
+
+
+
+
+@app.route('/Send_To_Mail', methods=['POST'])
+def Send_To_Mail():
+    """
+    handle data save the details from the form in new varaibles and send to my SMA tool function
+    :return: message: "back to our website"
+    """
+    projectFilePath = request.form['projectFilepath']
+    Mail_tool = my_link_Mail(projectFilePath)
+    return "Thank you, please check your mail box"
+
+
+@app.route('/my-link-Mail/')
+def my_link_Mail(Mail_Adress):
+    """
+    Ask for Email Adress from the user and send him the last plot
+    :param Mail_Adress: User Email Adress
+    :return:SEND Email with the plots attachments
+    """
+
+    # initiating connection with SMTP server
+    # SMTP= Simple Mail Transfer Protocol
+
+    yag = yagmail.SMTP("Enter your Email Adress here!" , "Enter your Email Password here!")
+
+    try:
+        yag.send(to=Mail_Adress, cc="qndlqrlyb@gmail.com", bcc="kandalker.liv@gmail.com",
+                 subject="Graph Analysis Attachment Plots", contents=["<h2> Your Plot is: </h2>", "<p> We hope to see you soon</p>"],
+                 attachments=[r"C:\Users\qndlq\PycharmProjects\pythonProject\flaskr\myPlot.png"])
+        print("Email sent")
+
+    except:
+        print("Error, Email not Send")
+    return render_template('plots.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
