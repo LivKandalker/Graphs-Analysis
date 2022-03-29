@@ -2,13 +2,13 @@ body {
     background-color: #5D6D7E;
 }
 
-.topnav {
+.navbar {
     background-color: #333;
     overflow: hidden;
     margin: 15px;
     }
 
-.topnav a {
+.navbar a {
     float: left;
     color: #f2f2f2;
     text-align: center;
@@ -17,7 +17,7 @@ body {
     font-size: 17px;
     }
 
-.topnav a:hover {
+.navbar a:hover {
     background-color: #ddd;
     color: black;
     }
@@ -59,4 +59,9 @@ label {
 input  {
     background-color: darkseagreen;
     color: #333333;
+}
+
+#thePlot{
+    height: 450px;
+    width: 1233px;
 }
