@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Graph Analysis</title>
+    <title>Graph Analysis</title>
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style/mystyle.css') }}">
 
 </head>
@@ -18,9 +19,9 @@
 
   <div class="navbar" > <!navigation-bar>
 
-      <a href="index.html">Home</a>
-      <a href="https://www.w3schools.com/html/tryit.asp?filename=tryhtml_links">News</a>
-      <a href="https://drive.google.com/drive/u/0/folders/1oTlhKkgTYABSL3zARI41nXMvbJ695OR0">Contact</a>
+      <a href="index.html">Home   |</a>
+      <a href="plots.html">Last Plot   |</a>
+      <a href="login.html">Login & Sign in   |</a>
       <a href="https://drive.google.com/drive/folders/1oTlhKkgTYABSL3zARI41nXMvbJ695OR0?usp=sharing">About</a>
 
 ` </div>
@@ -62,7 +63,7 @@
           Volume can be an indicator of  strong market, as rising markets on increasing volume are <br>
           typically viewed as strong and good for invest.</p>
 
-      <form class="handle_Data" action="{{ url_for('Send_to_Trend') }}" method="post">
+      <form target="_blank" class="handle_Data" action="{{ url_for('Send_to_Trend') }}" method="post">
 
           <label for="periodDateStartedTrendVolume">Start Date:</label>
           <input type="date" name="periodDateStarted" id="periodDateStartedTrendVolume">
@@ -85,7 +86,7 @@
           zero, with the indicator moving upwards into positive territory if price changes <br>
           are to the upside, and moving into negative territory if price changes are to the downside.</p>
 
-      <form class="handle_Data" action="{{ url_for('Send_To_ROC') }}" method="post">
+      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_ROC') }}" method="post">
 
           <label for="periodDateStartedRoc">Start Date:</label>
           <input type="date" name="ROCperiodDateStart" id="periodDateStartedRoc">
@@ -111,7 +112,7 @@
           <br> For example, a seven-period moving average can be calculated by adding the following seven prices together
           <br> and dividing the result by seven (the result is also known as an arithmetic mean average).</p>
 
-      <form class="handle_Data" action="{{ url_for('Send_To_SMA') }}" method="post">
+      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_SMA') }}" method="post">
 
           <label for="SMAperiodDateStart">Start Date:</label>
           <input type="date" name="SMAperiodDateStart" id="SMAperiodDateStart">
@@ -122,8 +123,26 @@
           <input class="gold" type="submit" value="SMA 20 & 100 Days" >
 
       </form>
+          <h2 class="margin">Let's talk about Candle Sticks charts</h2>
+      <p class="margin"> This real body represents the price range between the open and close of that day's trading.
+          <br> When the real body is filled in or black, it means the close was lower than the open. <br>
+          If the real body is empty, it means the close was higher than the open. <br>
+          Traders can alter these colors in their trading platform. <br>
+          For example, a down candle is often shaded red instead of black, and up candles are often shaded green instead of white.</p>
 
-      <form class="handle_Data" action="{{ url_for('Send_To_Mail') }}" method="post">
+      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_CandleStick') }}" method="post">
+
+          <label for="CandleStickPeriodDateStart">Start Date:</label>
+          <input type="date" name="CandleStickPeriodDateStart" id="CandleStickPeriodDateStart">
+          <label for="CandleStickPeriodDateEnd">End Date:</label>
+          <input type="date" name="CandleStickPeriodDateEnd" id="CandleStickPeriodDateEnd">
+          <label for="projectFilepath">Enter symbol of stock:</label>
+          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="projectFilepath">
+          <input class="gold" type="submit" value="Candle Stick chart" >
+
+      </form>
+
+      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_Mail') }}" method="post">
 
           <label for="MailProjectFilePath">Enter Your Email:</label>
           <input type="text" name="projectFilepath" placeholder="Example: Kandalker.liv@gmail.com" id="MailProjectFilePath">

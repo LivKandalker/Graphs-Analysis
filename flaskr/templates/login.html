@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>login page</title>
+     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style/mystyle.css') }}">
+
+</head>
+<body>
+     <div>
+          <h1 class="title_of_page">Please Login to the system</h1>
+          <p class="sub_title">To create user please click here :</p>
+          <form target="_blank" class="handle_Data" method="post">
+                <input class="gold" type="submit" value="Sign-in" >
+          </form>
+          <p class="sub_title">To Login Enter your details :</p>
+     </div>
+     <div>
+          <form target="_blank" class="handle_Data" method="post">
+
+               <label>Enter Your User-name:</label>
+               <input type="text" placeholder="Enter user name here">
+               <label>Enter Your Password:</label>
+               <input type="text" placeholder="Enter password here">
+               <input class="gold" type="submit" value="SEND" >
+
+          </form>
+          <div>
+               <h3>Thank you for choosing Graph Analyst ! :)</h3>
+          </div>
+
+     </div>
+</body>
+</html>
