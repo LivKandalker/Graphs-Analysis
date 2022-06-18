@@ -1,28 +1,14 @@
 import logging
 import os
-import string
-from random import random
-import io
-import random
-from flask import Response
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-from flask import Flask, render_template, request, redirect, url_for, send_file, Response
+from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file, Response
 import matplotlib.pyplot as plt
 import yagmail
 
 plt.style.use('fivethirtyeight')
+
 from scipy.stats import linregress
 import pandas as pd
 import yfinance as yf
-import seaborn as sns
-import matplotlib.dates as mdates
-import matplotlib.patches as mpatches
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import io
-from pygments.lexers import web
-from distutils.util import execute
-import pandas
 
 # app = Flask('templates-index.html')
 app = Flask(__name__, template_folder='../../flask_project/flaskr/templates')
@@ -30,25 +16,31 @@ GRAPH_FOLDER = os.path.join('flaskr')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = GRAPH_FOLDER
 
+
 # Decorator defines a route
-# http://localhost:5000/
+# https://localhost:5000/
 
-
+@app.route('/')
+@app.route('/index')
+@app.route('/my-link-Fibonachi/')
+@app.route('/plot.png')
 @app.route('/')
 def index():
     """
-    The link between python and HTML with flask
+    The link between python and HTML with flaskv - index page
     :return: index.html
     """
     return render_template("index.html")
 
-@app.route('/')
+
+@app.route('/plots', methods=['GET', 'POST'])
 def plots():
     """
     The link between python and HTML with flask
     :return: plots.html
     """
     return render_template("plots.html")
+
 
 @app.route('/Send_To_Fibonacci', methods=['POST'])
 def Send_To_Fibonacci():
@@ -67,10 +59,6 @@ def Send_To_Fibonacci():
     return fibonacci_graph
 
 
-@app.route('/')
-@app.route('/index')
-@app.route('/my-link-Fibonachi/')
-@app.route('/plot.png')
 def my_link_Fibonachi(company_symbol, Date_start, Date_End):
     """
   Calculate all of the Fibonacci level with the max&min to the chosen period, and show fibonacci
@@ -121,7 +109,8 @@ def my_link_Fibonachi(company_symbol, Date_start, Date_End):
     plt.ylabel('Close Price in USD', fontsize=18)
     plt.legend(loc="upper left")
 
-    fig = plt.savefig("myPlot")
+    plt.savefig("myPlot.jpg")
+    plt.show()
     return render_template('plots.html')
 
 
@@ -195,12 +184,14 @@ def my_link_Trends(company_symbol, periodDateStart, periodDateEnd):
     plt.legend(loc="upper left")
 
     # Save the plot in Varaible and return the plot to the HTML web
-    #plot_url = plt.show()
-    #return render_template('plots.html', plot_url=plot_url)
+    # plot_url = plt.show()
+    # return render_template('plots.html', plot_url=plot_url)
 
     # Save the plot in Varaible and return the plot to the HTML web
     fig = plt.savefig("myPlot")
+    plt.show()
     return render_template('plots.html')
+
 
 @app.route('/Send_to_Trend', methods=['POST'])
 def Send_to_Trend():
@@ -271,12 +262,14 @@ def my_link_ROCtool(company_symbol, ROCperiodDateStart, ROCperiodDateEnd, ROCter
     plt.legend(loc="upper left")
 
     # Save the plot in Varaible and return the plot to the HTML web
-    #plot_url = plt.show()
-    #return render_template('index.html', plot_url=plot_url)
+    # plot_url = plt.show()
+    # return render_template('index.html', plot_url=plot_url)
 
     # Save the plot in Varaible and return the plot to the HTML web
     fig = plt.savefig("myPlot")
+    plt.show()
     return render_template('plots.html')
+
 
 @app.route('/Send_To_ROC', methods=['POST'])
 def Send_To_ROC():
@@ -340,14 +333,13 @@ def my_link_SMAtool(company_symbol, SMAperiodDateStart, SMAperiodDateEnd):
     data['50_SMA'].plot(color='green', label='50 - day SMA')
     plt.legend(loc="upper left")
     # Save the plot in Varaible and return the plot to the HTML web
-    #plot_url = plt.show()
-    #return render_template('index.html', plot_url=plot_url)
+    # plot_url = plt.show()
+    # return render_template('index.html', plot_url=plot_url)
 
     # Save the plot in Varaible and return the plot to the HTML web
     fig = plt.savefig("myPlot")
+    plt.show()
     return render_template('plots.html')
-
-
 
 
 @app.route('/Send_To_Mail', methods=['POST'])
@@ -372,11 +364,12 @@ def my_link_Mail(Mail_Adress):
     # initiating connection with SMTP server
     # SMTP= Simple Mail Transfer Protocol
 
-    yag = yagmail.SMTP("Enter your Email Adress here!" , "Enter your Email Password here!")
+    yag = yagmail.SMTP("Enter your Email Adress here!", "Enter your Email Password here!")
 
     try:
         yag.send(to=Mail_Adress, cc="qndlqrlyb@gmail.com", bcc="kandalker.liv@gmail.com",
-                 subject="Graph Analysis Attachment Plots", contents=["<h2> Your Plot is: </h2>", "<p> We hope to see you soon</p>"],
+                 subject="Graph Analysis Attachment Plots",
+                 contents=["<h2> Your Plot is: </h2>", "<p> We hope to see you soon</p>"],
                  attachments=[r"C:\Users\qndlq\PycharmProjects\pythonProject\flaskr\myPlot.png"])
         print("Email sent")
 
@@ -384,6 +377,51 @@ def my_link_Mail(Mail_Adress):
         print("Error, Email not Send")
     return render_template('plots.html')
 
+
+@app.route('/Send_To_CandleStick', methods=['POST'])
+def Send_To_CandleStick():
+    """
+    handle data save the details from the form in new varaibles and send to my SMA tool function
+    :return: message: "back to our website"
+    """
+    projectFilePath = request.form['projectFilepath']
+    candleStickPeriodDateStart = request.form['CandleStickPeriodDateStart']
+    CandleStickPeriodDateEnd = request.form['CandleStickPeriodDateEnd']
+    CandleStick_tool = my_link_Candle_Stick_tool(projectFilePath, candleStickPeriodDateStart, CandleStickPeriodDateEnd)
+    return CandleStick_tool
+
+
+@app.route('/my-link-CandleStick/')
+def my_link_Candle_Stick_tool(company_symbol, candleStickPeriodDateStart, CandleStickPeriodDateEnd):
+    """
+    Create a graph figure of the Candle Stick tool from the HTML
+    :param company_symbol:stocks symbol (TSLA - is the symbol for tesla company for example)
+    :param candleStickPeriodDateStart:Date start user chose
+    :param CandleStickPeriodDateEnd:Date End user chose
+    :return:Candle Stick tool from the HTML
+    """
+    import plotly.graph_objects as go
+    import yfinance as yf
+
+    df = yf.download(company_symbol, start=candleStickPeriodDateStart, end=CandleStickPeriodDateEnd)
+    df['date_id'] = ((df.index.date - df.index.date.min())).astype('timedelta64[D]')
+    df['date_id'] = df['date_id'].dt.days + 1
+
+    symbpl = yf.Ticker(company_symbol)
+
+    fig = go.Figure(data=[go.Candlestick(x=df['date_id'],
+                                         open=df['Open'],
+                                         high=df['High'],
+                                         low=df['Low'],
+                                         close=df['Close'])])
+    fig.update_layout(
+        title='The ' + company_symbol + ' charts ' + ' From : ' + candleStickPeriodDateStart + ' To : ' + CandleStickPeriodDateEnd,
+        yaxis_title=company_symbol + ' Stock', xaxis_title='The Market cap : ' + str(symbpl.info['marketCap']) +
+                                                           ' The Net Income : ' + str(symbpl.info['netIncomeToCommon']))
+
+    fig.update_layout(xaxis_rangeslider_visible=False)
+    fig.show()
+    return render_template('plots.html')
 
 
 if __name__ == '__main__':

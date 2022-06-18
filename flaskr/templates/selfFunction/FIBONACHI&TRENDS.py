@@ -32,10 +32,12 @@ import datetime
 # #change period time here
 
 data = yf.download("ETH-USD", start="2017-10-01", end="2021-10-21")
-
+print(data)
 data0 = data.copy()
 data0['date_id'] = ((data0.index.date - data0.index.date.min())).astype('timedelta64[D]')
+print(data0['date_id'])
 data0['date_id'] = data0['date_id'].dt.days + 1
+
 
 data2 = data0.copy()
 period_trading = 25 #200, 12, 25
