@@ -1,5 +1,7 @@
 import logging
 import os
+import re
+
 from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file, Response
 import matplotlib.pyplot as plt
 import yagmail
@@ -9,6 +11,10 @@ plt.style.use('fivethirtyeight')
 from scipy.stats import linregress
 import pandas as pd
 import yfinance as yf
+
+import requests
+from bs4 import BeautifulSoup
+import wikipedia
 
 # app = Flask('templates-index.html')
 app = Flask(__name__, template_folder='../../flask_project/flaskr/templates')
@@ -25,12 +31,69 @@ app.config['UPLOAD_FOLDER'] = GRAPH_FOLDER
 @app.route('/my-link-Fibonachi/')
 @app.route('/plot.png')
 @app.route('/')
+#def index():
+    #"""
+    #The link between python and HTML with flaskv - index page
+    #:return: index.html
+    #"""
+    #return render_template("index.html")
+
+@app.route('/')
 def index():
-    """
-    The link between python and HTML with flaskv - index page
-    :return: index.html
-    """
-    return render_template("index.html")
+    # Use the web scraping wiki page as our starting point
+    FibonacciResponse = requests.get(
+        url="https://en.wikipedia.org/wiki/Fibonacci_number",
+    )
+    TrendVolumeResponse = requests.get(
+        url="https://en.wikipedia.org/wiki/Volume_analysis",
+    )
+    RocResponse = requests.get(
+        url="https://en.wikipedia.org/wiki/Momentum_investing",
+    )
+    SMAResponse = requests.get(
+        url="https://en.wikipedia.org/wiki/Moving_average",
+    )
+    CandleStickResponse = requests.get(
+        url="https://en.wikipedia.org/wiki/Candlestick_chart",
+    )
+
+    # Find an element by the ID tag using Beautiful soup
+    Fibonacci_title = BeautifulSoup(FibonacciResponse.content, 'html.parser').find(id="firstHeading")
+    Fibo_data = Fibonacci_title.string
+    Volume_title = BeautifulSoup(TrendVolumeResponse.content, 'html.parser').find(id="firstHeading")
+    Vol_data = Volume_title.string
+    Roc_title = BeautifulSoup(RocResponse.content, 'html.parser').find(id="firstHeading")
+    Roc_data = Roc_title.string
+    SMA_title = BeautifulSoup(SMAResponse.content, 'html.parser').find(id="firstHeading")
+    SMA_data = SMA_title.string
+    CandleStick_title = BeautifulSoup(CandleStickResponse.content, 'html.parser').find(id="firstHeading")
+    CandleStick_data = CandleStick_title.string
+
+    # Specify the title of the Wikipedia page
+    Fibo_wiki = wikipedia.page('Fibonacci_number')
+    Vol_wiki = wikipedia.page('Volume_analysis')
+    Roc_wiki = wikipedia.page('Momentum_investing')
+    SMA_wiki = wikipedia.page('Moving_average')
+    CandleStick_wiki = wikipedia.page('Candlestick_chart')
+
+    # Extract the plain text content of the page
+    Fibo_text = Fibo_wiki.content
+    Fibo_res = Fibo_text.partition("== Definition ==")[0]
+    Vol_text = Vol_wiki.content
+    Vol_res = Vol_text.partition("== Theory ==")[0]
+    Roc_text = Roc_wiki.content
+    Roc_res = Roc_text.partition("== History ==")[0]
+    SMA_text = SMA_wiki.content
+    SMA_res = SMA_text.partition("== Simple moving average ==")[0]
+    CandleStick_text = CandleStick_wiki.content
+    CandleStick_res = CandleStick_text.partition("== History ==")[0]
+
+    return render_template('index.html', FiboDataToRender=Fibo_data, FiboContentToRender=Fibo_res,
+                           VolDataToRender=Vol_data, VolContentToRender=Vol_res,
+                           RocDataToRender=Roc_data, RocContentToRender=Roc_res,
+                           SMADataToRender=SMA_data, SMAContentToRender=SMA_res,
+                           CandleStickDataToRender=CandleStick_data, CandleStickContentToRender=CandleStick_res)
+
 
 
 @app.route('/plots', methods=['GET', 'POST'])
@@ -422,6 +485,12 @@ def my_link_Candle_Stick_tool(company_symbol, candleStickPeriodDateStart, Candle
     fig.update_layout(xaxis_rangeslider_visible=False)
     fig.show()
     return render_template('plots.html')
+
+
+from flask import render_template
+
+
+
 
 
 if __name__ == '__main__':
