@@ -68,6 +68,10 @@ def index():
     SMA_data = SMA_title.string
     CandleStick_title = BeautifulSoup(CandleStickResponse.content, 'html.parser').find(id="firstHeading")
     CandleStick_data = CandleStick_title.string
+    # Find an element by the name tag (img) using Beautiful soup
+    URL = "https://www.wikihow.com/Read-a-Candlestick-Chart"  # Replace this with the website's URL
+    getURL = requests.get(URL, headers={"User-Agent": "Mozilla/5.0"})
+    img = BeautifulSoup(getURL.text, 'html.parser').find_all('img')
 
     # Specify the title of the Wikipedia page
     Fibo_wiki = wikipedia.page('Fibonacci_number')
@@ -88,11 +92,22 @@ def index():
     CandleStick_text = CandleStick_wiki.content
     CandleStick_res = CandleStick_text.partition("== History ==")[0]
 
+    # save in a variable only the img src
+    imageSources = []
+    for image in img:
+        imageSources.append(image.get('src'))
+
+    # extract substring between two characters to get the first img link
+    pattern = "None\,(.*?)\, None,"
+    CandleStickSubstring = re.search(pattern, str(imageSources)).group(1)
+    CandleStickSubstring = CandleStickSubstring[2:-1]
+
     return render_template('index.html', FiboDataToRender=Fibo_data, FiboContentToRender=Fibo_res,
                            VolDataToRender=Vol_data, VolContentToRender=Vol_res,
                            RocDataToRender=Roc_data, RocContentToRender=Roc_res,
                            SMADataToRender=SMA_data, SMAContentToRender=SMA_res,
-                           CandleStickDataToRender=CandleStick_data, CandleStickContentToRender=CandleStick_res)
+                           CandleStickDataToRender=CandleStick_data, CandleStickContentToRender=CandleStick_res,
+                           CandleStickImage= CandleStickSubstring)
 
 
 
