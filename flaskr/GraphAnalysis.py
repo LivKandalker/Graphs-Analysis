@@ -1,17 +1,14 @@
 import logging
 import os
 import re
-
+from numerize import numerize
 from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file, Response
 import matplotlib.pyplot as plt
 import yagmail
-
 plt.style.use('fivethirtyeight')
-
 from scipy.stats import linregress
 import pandas as pd
 import yfinance as yf
-
 import requests
 from bs4 import BeautifulSoup
 import wikipedia
@@ -494,9 +491,11 @@ def my_link_Candle_Stick_tool(company_symbol, candleStickPeriodDateStart, Candle
                                          close=df['Close'])])
     fig.update_layout(
         title='The ' + company_symbol + ' charts ' + ' From : ' + candleStickPeriodDateStart + ' To : ' + CandleStickPeriodDateEnd,
-        yaxis_title=company_symbol + ' Stock', xaxis_title='The Market cap : ' + str(symbpl.info['marketCap']) +
-                                                           ' The Net Income : ' + str(symbpl.info['netIncomeToCommon']))
+        yaxis_title=company_symbol + ' Stock', xaxis_title='The Market cap : ' + str(numerize.numerize(symbpl.info['marketCap'])) +
+                                                           ' The Net Income : ' + str(numerize.numerize(symbpl.info['netIncomeToCommon'])))
 
+    print(symbpl.info['marketCap'])
+    print(type(symbpl.info['marketCap']))
     fig.update_layout(xaxis_rangeslider_visible=False)
     fig.show()
     return render_template('plots.html')
