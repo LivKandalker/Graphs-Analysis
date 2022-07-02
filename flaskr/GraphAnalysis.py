@@ -2,16 +2,16 @@ import logging
 import os
 import re
 from numerize import numerize
-from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file, Response
+from flask import Flask, request
 import matplotlib.pyplot as plt
 import yagmail
-plt.style.use('fivethirtyeight')
 from scipy.stats import linregress
 import pandas as pd
 import yfinance as yf
 import requests
 from bs4 import BeautifulSoup
 import wikipedia
+plt.style.use('fivethirtyeight')
 
 # app = Flask('templates-index.html')
 app = Flask(__name__, template_folder='../../flask_project/flaskr/templates')
@@ -65,12 +65,13 @@ def index():
     SMA_data = SMA_title.string
     CandleStick_title = BeautifulSoup(CandleStickResponse.content, 'html.parser').find(id="firstHeading")
     CandleStick_data = CandleStick_title.string
+
     # Find an element by the name tag (img) using Beautiful soup
     URL = "https://www.wikihow.com/Read-a-Candlestick-Chart"  # Replace this with the website's URL
     getURL = requests.get(URL, headers={"User-Agent": "Mozilla/5.0"})
     img = BeautifulSoup(getURL.text, 'html.parser').find_all('img')
 
-    # Specify the title of the Wikipedia page
+    # Specify the Wikipedia page
     Fibo_wiki = wikipedia.page('Fibonacci_number')
     Vol_wiki = wikipedia.page('Volume_analysis')
     Roc_wiki = wikipedia.page('Momentum_investing')
@@ -490,12 +491,12 @@ def my_link_Candle_Stick_tool(company_symbol, candleStickPeriodDateStart, Candle
                                          low=df['Low'],
                                          close=df['Close'])])
     fig.update_layout(
-        title='The ' + company_symbol + ' charts ' + ' From : ' + candleStickPeriodDateStart + ' To : ' + CandleStickPeriodDateEnd,
+        title='The ' + company_symbol + ' charts ' + ' From : ' + candleStickPeriodDateStart + ' To : ' + CandleStickPeriodDateEnd + ' | Industry : ' + symbpl.info['industry'] + ' | Sector : ' + symbpl.info['sector'],
         yaxis_title=company_symbol + ' Stock', xaxis_title='The Market cap : ' + str(numerize.numerize(symbpl.info['marketCap'])) +
-                                                           ' The Net Income : ' + str(numerize.numerize(symbpl.info['netIncomeToCommon'])))
+                                                           ' | The Net Income : ' + str(numerize.numerize(symbpl.info['netIncomeToCommon']))+
+                                                           ' | The Price to earnings ratio PE Multiple : ' + str(int(symbpl.info['marketCap'] /
+                                                                                                                 symbpl.info['netIncomeToCommon'])))
 
-    print(symbpl.info['marketCap'])
-    print(type(symbpl.info['marketCap']))
     fig.update_layout(xaxis_rangeslider_visible=False)
     fig.show()
     return render_template('plots.html')
