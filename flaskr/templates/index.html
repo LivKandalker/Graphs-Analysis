@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Graph Analysis</title>
+  <title>Graph Analysis</title>
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style/mystyle.css') }}">
 
 </head>
@@ -19,20 +18,30 @@
 
   <div class="navbar" > <!navigation-bar>
 
-      <a href="index.html">Home   |</a>
-      <a href="plots.html">Last Plot   |</a>
-      <a href="login.html">Login & Sign in   |</a>
+      <a href="index.html">Home</a>
+      <a href="https://www.w3schools.com/html/tryit.asp?filename=tryhtml_links">News</a>
+      <a href="https://drive.google.com/drive/u/0/folders/1oTlhKkgTYABSL3zARI41nXMvbJ695OR0">Contact</a>
       <a href="https://drive.google.com/drive/folders/1oTlhKkgTYABSL3zARI41nXMvbJ695OR0?usp=sharing">About</a>
 
 ` </div>
+
 </div>
   <div>
+      <div><!The Plots here on the right side of homePage in the system. In default S&P500 Adj close>
+
+
+
+
+      </div>
       <div><!The fibonacci tool include Title, Sub-title, period of data, Symbol-name of stocks/coins and submit>
 
-          <h2 class="margin">Let's talk about {{ FiboDataToRender }} : </h2>
-          <p class="margin">{{ FiboContentToRender }}</p>
+      <h2 class="margin">Let's talk about Fibonacci</h2>
+      <p class="margin">Leonardo Fibonacci also known as Leonardo of Pisa,Fibonacci series is a series for introduce things <br>
+          that repeat themselves again and again. Fibonacci-Graph-Analysis tool: <br>
+          Support & resistance area in stocks and digital coins graph. </p>
 
       <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_Fibonacci') }}"  method="post">
+
           <label for="periodDateStartedFibonacci">Start Date:</label>
           <input type="date" name="periodDateStarted" id="periodDateStartedFibonacci">
           <label for="periodDateEndFibonacci">End Date:</label>
@@ -40,15 +49,21 @@
           <label for="projectFilepathFibonacci">Symbol of stock:</label>
           <input type="text" name="projectFilepath"  placeholder="Choose symbol of stock" id="projectFilepathFibonacci">
           <input class="gold" type="submit" value="Fibonachi tool">
+
       </form>
+
       </div>
 
       <div><!The Volume&Trends tool include Title, Sub-title, period of data, Symbol-name of stocks/coins and submit>
 
-          <h2 class="margin">Let's talk about {{ VolDataToRender }} : </h2>
-          <p class="margin">{{ VolContentToRender }}</p>
+      <h2 class="margin">Let's talk about trends line and volume</h2>
+      <p class="margin">Current trading volume, Trading volume is a measure of how much of a given financial asset has traded
+          <br> in a period of time. For stocks, volume is measured in the number of shares traded <br>
+          Volume can be an indicator of  strong market, as rising markets on increasing volume are <br>
+          typically viewed as strong and good for invest.</p>
 
-      <form target="_blank" class="handle_Data" action="{{ url_for('Send_to_Trend') }}" method="post">
+      <form class="handle_Data" action="{{ url_for('Send_to_Trend') }}" method="post">
+
           <label for="periodDateStartedTrendVolume">Start Date:</label>
           <input type="date" name="periodDateStarted" id="periodDateStartedTrendVolume">
           <label for="periodDateEndTrendVolume">End Date:</label>
@@ -56,15 +71,22 @@
           <label for="projectFilepathTrendVolume">Symbol Name:</label>
           <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="projectFilepathTrendVolume">
           <input class="gold" type="submit" value="Trends & Volume">
+
       </form>
+
       </div>
 
       <div><! The ROC-indicator tool include Title, Sub-title, period of data, Symbol-name of stocks/coins, ROC_num and submit >
 
-          <h2 class="margin">Let's talk about {{ RocDataToRender }} : </h2>
-          <p class="margin">{{ RocContentToRender }}</p>
+      <h2 class="margin">Let's talk about ROC indicator</h2>
+      <p class="margin">The Price Rate of Change (ROC) is a momentum-based technical indicator that <br>
+          measures the percentage change in price between the current price and the <br>
+          price a certain number of periods ago. The ROC indicator is plotted against <br>
+          zero, with the indicator moving upwards into positive territory if price changes <br>
+          are to the upside, and moving into negative territory if price changes are to the downside.</p>
 
-      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_ROC') }}" method="post">
+      <form class="handle_Data" action="{{ url_for('Send_To_ROC') }}" method="post">
+
           <label for="periodDateStartedRoc">Start Date:</label>
           <input type="date" name="ROCperiodDateStart" id="periodDateStartedRoc">
           <label for="periodDateEndRoc">End Date:</label>
@@ -73,17 +95,24 @@
           <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="projectFilepathRoc">
           <label for="termTradingRoc">Enter term of Trading:</label>
           <input type="number" name="termTrading" placeholder="Choose number of period" id="termTradingRoc">
-          <input class="gold" type="submit" value="ROC-Momentum tool" >
+          <input class="gold" type="submit" value="ROC tool" >
+
       </form>
+
       </div>
 
       <div><! The Average-indicator tool named SMA simple moving average, Sub-title, period of data,
           Symbol-name of stocks/coins and submit >
 
-          <h2 class="margin">Let's talk about {{ SMADataToRender }} : </h2>
-          <p class="margin">{{ SMAContentToRender }}</p>
+      <h2 class="margin">Let's talk about SMA (average) indicator</h2>
+      <p class="margin">SMA calculates the average of price data. <br>
+          The SMA is the most common type of average used by technical analysts
+          <br> and is calculated by dividing the sum of a set of prices by the total number of prices found in the series.
+          <br> For example, a seven-period moving average can be calculated by adding the following seven prices together
+          <br> and dividing the result by seven (the result is also known as an arithmetic mean average).</p>
 
-      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_SMA') }}" method="post">
+      <form class="handle_Data" action="{{ url_for('Send_To_SMA') }}" method="post">
+
           <label for="SMAperiodDateStart">Start Date:</label>
           <input type="date" name="SMAperiodDateStart" id="SMAperiodDateStart">
           <label for="SMAperiodDateEnd">End Date:</label>
@@ -91,27 +120,10 @@
           <label for="SMAprojectFilePath">Enter symbol of stock:</label>
           <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="SMAprojectFilePath">
           <input class="gold" type="submit" value="SMA 20 & 100 Days" >
+
       </form>
-      </div>
-       <div><! The CandleStick-chart Sub-title, period of data, Symbol-name of stocks/coins and submit >
 
-           <h2 class="margin">Let's talk about {{ CandleStickDataToRender }} : </h2>
-          <p class="margin">{{ CandleStickContentToRender }}</p>
-           <a target="_blank" href= " {{ CandleStickImage }} " >For more explanation!</a>
-
-      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_CandleStick') }}" method="post">
-          <label for="CandleStickPeriodDateStart">Start Date:</label>
-          <input type="date" name="CandleStickPeriodDateStart" id="CandleStickPeriodDateStart">
-          <label for="CandleStickPeriodDateEnd">End Date:</label>
-          <input type="date" name="CandleStickPeriodDateEnd" id="CandleStickPeriodDateEnd">
-          <label for="projectFilepath">Enter symbol of stock:</label>
-          <input type="text" name="projectFilepath" placeholder="Choose symbol of stock" id="projectFilepath">
-          <input class="gold" type="submit" value="Candle Stick chart" >
-      </form>
-        </div>
-
-      <div>
-      <form target="_blank" class="handle_Data" action="{{ url_for('Send_To_Mail') }}" method="post">
+      <form class="handle_Data" action="{{ url_for('Send_To_Mail') }}" method="post">
 
           <label for="MailProjectFilePath">Enter Your Email:</label>
           <input type="text" name="projectFilepath" placeholder="Example: Kandalker.liv@gmail.com" id="MailProjectFilePath">
